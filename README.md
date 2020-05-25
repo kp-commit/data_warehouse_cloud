@@ -117,7 +117,7 @@ And below is an example of what the data in a log file, 2018-11-12-events.json, 
 ##### Note: Columns named to match Log data json file
 ##### Lowest possible column size taken as possible to maximize storage and processing performace
 ##### No other major constraints are these are temporary staging tables
-```
+```sql
 artist VARCHAR,
 auth VARCHAR,
 firstName VARCHAR,
@@ -142,7 +142,7 @@ userId INTEGER
 ##### Note: Columns named to match song data json files
 ##### Lowest possible column size taken as possible to maximize storage and processing performance
 ##### No other major constraints are these are temporary staging tables
-```
+```sql
 num_songs INTEGER,
 artist_id VARCHAR,
 artist_latitude DECIMAL(10,6),
@@ -158,7 +158,7 @@ year INTEGER
 ### Dimension Table: dm_users
 ##### Lowest possible column size taken as possible to maximize storage and processing performance
 ##### Assigned DISTKEY on user_id both utilized in many joins as later seen in analytical queries
-```
+```sql
 user_id INTEGER NOT NULL PRIMARY KEY DISTKEY,
 first_name VARCHAR NOT NULL,
 last_name VARCHAR NOT NULL,
@@ -168,7 +168,7 @@ level VARCHAR(10) NOT NULL
 ### Dimension Table: dm_songs
 ##### Note: Assigned DISTKEY on title because of high number of entries (this is the biggest table in set). 
 ##### SORTKEY on song_id because of ORDER BY on this to minimize shuffling.
-```
+```sql
 song_id VARCHAR NOT NULL PRIMARY KEY SORTKEY,
 title VARCHAR NOT NULL DISTKEY,
 artist_id VARCHAR NOT NULL,
@@ -179,7 +179,7 @@ duration DECIMAL
 ### Dimension Table: dm_artists
 ##### Note: Assigned DISTKEY on title because of high number of entries
 ##### DISTKEY on name because of number of groupings done on this analytics and this is also 3rd biggest table in set.
-```
+```sql
 artist_id VARCHAR NOT NULL PRIMARY KEY SORTKEY,
 name VARCHAR NOT NULL DISTKEY,
 location VARCHAR,
@@ -190,7 +190,7 @@ longitude DECIMAL(10,6)
 ##### Note: Assigned DISTKEY on start_time because similiar start_time can be easily looked up.
 ##### SORTKEY on weekday because of analytics looking into simliar weekday
 
-```
+```sql
 start_time TIMESTAMP NOT NULL PRIMARY KEY DISTKEY,
 hour INTEGER NOT NULL,
 day INTEGER NOT NULL,
@@ -202,7 +202,7 @@ weekday INTEGER NOT NULL SORTKEY
 
 ### Fact Table 
 ##### Note: Assigned DISTKEY and SORTKEY on song_id it is utilized in many joins for lookups and also for ORDER BY
-```
+```sql
 songplay_id INTEGER IDENTITY(0,1) PRIMARY KEY,
 start_time TIMESTAMP NOT NULL,
 user_id INTEGER NOT NULL,
@@ -257,7 +257,7 @@ user_agent VARCHAR
 ![New Terminal Window](/images/new_terminal.png)
 
 #### 2. Modify permissions to make ```env.sh``` executeable:
-```
+```bash
 root@d5ef17e2c407:/home/workspace# ./env.sh 
 PATH updated
 /opt/conda/bin:/opt/spark-2.4.3-bin-hadoop2.7/bin:/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/workspace
@@ -266,7 +266,7 @@ root@d5ef17e2c407:/home/workspace#
 ```
 
 #### 3. Execute ```./cluster_create.py```
-```
+```bash
 root@d5ef17e2c407:/home/workspace# ./cluster_create.py 
 Creating a new IAM Role...An error occurred (EntityAlreadyExists) when calling the CreateRole operation: Role with name dwhRole already exists.
 Attaching Policy to IAM Role...Done
@@ -288,7 +288,7 @@ Endpoint AVAILABLE: dwhcluster.ciuwmycyuglg.us-west-2.redshift.amazonaws.com
 ```
 
 #### 4. Execute ```./create_tables.py```
-```
+```bash
 root@d5ef17e2c407:/home/workspace# ./create_tables.py 
 Droping Tables in Cluster...Dropped!
 Creating Tables in Cluster...Created!
@@ -296,7 +296,7 @@ Creating Tables in Cluster...Created!
 
 
 #### 5. Execute ```./etl.py``` and check table count outputs.
-```
+```bash
 root@d5ef17e2c407:/home/workspace# ./etl.py 
 Load Staging Tables...
 QUERY1 COMPLETED
@@ -323,7 +323,7 @@ COUNTS ROWS COMPLETED
 ```
 
 #### 6. Execute ```./analytics.py``` and check query outputs.
-```
+```bash
 root@d5ef17e2c407:/home/workspace# ./analytics.py 
 
 Running Analytics...
@@ -436,7 +436,7 @@ ANALYTICS COMPLETE
 ```
 
 #### 7. Optionally, to delete cluster execute ```./cluster_delete.py```:
-```
+```bash
 root@d5ef17e2c407:/home/workspace# ./cluster_delete.py 
 Detaching IAM Role
 Deleting Cluster
@@ -453,8 +453,7 @@ Deleting Cluster
 Deleting Cluster...###########################An error occurred (ClusterNotFound) when calling the DescribeClusters operation: Cluster dwhcluster not found.
 DELETED. Cluster not present now.
 ```
-
-###  
+  
 
 ### Common Issues and Resolution:
 
